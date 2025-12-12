@@ -1,0 +1,43 @@
+package prpo.mealtracking;
+
+import jakarta.persistence.*;
+import java.time.LocalDateTime;
+
+@Entity
+@Table(name = "meal")
+public class Meal {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
+    private char mealType;
+    private LocalDateTime dateTime;
+
+    public Meal(){
+
+    }
+
+    public Meal(char mealType){
+        this.mealType = mealType;
+    }
+
+    public Integer getId(){
+        return id;
+    }
+
+    public char getmealType(){
+        return mealType;
+    }
+
+     public LocalDateTime getDateTime() {
+        return dateTime;
+    }
+
+    public void setmealType(char c){
+        this.mealType = c;
+    }
+
+    public void setDateTime(LocalDateTime dateTime) {
+        this.dateTime = dateTime;
+    }
+}
