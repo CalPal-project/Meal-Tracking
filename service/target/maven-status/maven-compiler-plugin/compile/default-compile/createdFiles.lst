@@ -1,2 +1,5 @@
 prpo\mealtracking\MealFoodRepository.class
+prpo\mealtracking\dtos\CreateMealRequest.class
 prpo\mealtracking\MealRepository.class
+prpo\mealtracking\dtos\FoodAmount.class
+prpo\mealtracking\FoodRepository.class

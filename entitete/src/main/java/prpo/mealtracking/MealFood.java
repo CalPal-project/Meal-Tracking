@@ -1,4 +1,6 @@
 package prpo.mealtracking;
+import java.net.Inet4Address;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -8,17 +10,22 @@ public class MealFood {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private Integer mealId;
-    private Integer foodId;
-    private Integer amount;
+    @ManyToOne
+    private Meal meal;
+    @ManyToOne
+    private Food food;
+
+    private double amount;
+
+    private Integer calories; //izracunane kalorije 
 
     public MealFood(){
 
     }
 
-    public MealFood(Integer mealId, Integer foodId, Integer amount){
-        this.mealId = mealId;
-        this.foodId = foodId;
+    public MealFood(Meal meal, Food food, double amount){
+        this.meal = meal;
+        this.food = food;
         this.amount = amount;
     }
 
@@ -26,27 +33,31 @@ public class MealFood {
         return id;
     }
 
-    public Integer getmealId(){
-        return mealId;
+    public Meal getmeal(){
+        return meal;
     }
 
-    public Integer getfoodId(){
-        return foodId;
+    public Food getfood(){
+        return food;
     }
 
-    public Integer getamount(){
+    public void setAmount(double a){
+        this.amount = a;
+    }
+
+    public double getamount(){
         return amount;
     }
 
-    public void setmealId(Integer i){
-        this.mealId = i;
+    public void setmeal(Meal m){
+        this.meal = m;
     }
 
-    public void setfoodId(Integer i){
-        this.foodId = i;
+    public void setfood(Food f){
+        this.food = f;
     }
 
-    public void setamout(Integer i){
+    public void setamout(double i){
         this.amount = i;
     }
 }

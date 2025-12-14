@@ -2,6 +2,8 @@ package prpo.mealtracking;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "meal")
@@ -12,6 +14,9 @@ public class Meal {
 
     private char mealType;
     private LocalDateTime dateTime;
+
+    @OneToMany(mappedBy = "meal", cascade = CascadeType.ALL)
+    private List<MealFood> mealFoods = new ArrayList<>();
 
     public Meal(){
 
