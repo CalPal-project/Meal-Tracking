@@ -17,13 +17,13 @@ public class MealFood {
 
     private double amount;
 
-    private Integer calories; //izracunane kalorije 
+    private Double calories; //izracunane kalorije 
 
     public MealFood(){
 
     }
 
-    public MealFood(Meal meal, Food food, double amount){
+    public MealFood(Meal meal, Food food, Double amount){
         this.meal = meal;
         this.food = food;
         this.amount = amount;
@@ -59,5 +59,13 @@ public class MealFood {
 
     public void setamout(double i){
         this.amount = i;
+    }
+
+    public void setCalories(Double c){
+        this.calories = c;
+    }
+    
+    public Double getCalories(){
+        return calories;
     }
 }

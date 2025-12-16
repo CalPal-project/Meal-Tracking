@@ -1,5 +1,8 @@
 prpo\mealtracking\MealFoodRepository.class
+prpo\mealtracking\dtos\MealDto.class
+prpo\mealtracking\dtos\UpdateMealRequest.class
+prpo\mealtracking\FoodRepository.class
 prpo\mealtracking\dtos\CreateMealRequest.class
 prpo\mealtracking\MealRepository.class
 prpo\mealtracking\dtos\FoodAmount.class
-prpo\mealtracking\FoodRepository.class
+prpo\mealtracking\dtos\FoodItemDto.class

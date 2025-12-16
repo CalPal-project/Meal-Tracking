@@ -1,5 +1,8 @@
 C:\Users\andre\Documents\PRPO-projekt\Meal-Tracking\service\src\main\java\prpo\mealtracking\dtos\CreateMealRequest.java
 C:\Users\andre\Documents\PRPO-projekt\Meal-Tracking\service\src\main\java\prpo\mealtracking\dtos\FoodAmount.java
+C:\Users\andre\Documents\PRPO-projekt\Meal-Tracking\service\src\main\java\prpo\mealtracking\dtos\FoodItemDto.java
+C:\Users\andre\Documents\PRPO-projekt\Meal-Tracking\service\src\main\java\prpo\mealtracking\dtos\MealDto.java
+C:\Users\andre\Documents\PRPO-projekt\Meal-Tracking\service\src\main\java\prpo\mealtracking\dtos\UpdateMealRequest.java
 C:\Users\andre\Documents\PRPO-projekt\Meal-Tracking\service\src\main\java\prpo\mealtracking\FoodRepository.java
 C:\Users\andre\Documents\PRPO-projekt\Meal-Tracking\service\src\main\java\prpo\mealtracking\MealFoodRepository.java
 C:\Users\andre\Documents\PRPO-projekt\Meal-Tracking\service\src\main\java\prpo\mealtracking\MealRepository.java

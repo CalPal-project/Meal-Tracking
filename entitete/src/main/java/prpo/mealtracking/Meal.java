@@ -15,6 +15,8 @@ public class Meal {
     private char mealType;
     private LocalDateTime dateTime;
 
+    private Double calories;
+
     @OneToMany(mappedBy = "meal", cascade = CascadeType.ALL)
     private List<MealFood> mealFoods = new ArrayList<>();
 
@@ -45,4 +47,17 @@ public class Meal {
     public void setDateTime(LocalDateTime dateTime) {
         this.dateTime = dateTime;
     }
+
+    public void setCalories(Double c){
+        this.calories = c;
+    }
+
+    public Double getCalories(){
+        return calories;
+    }
+
+    public List<MealFood> getFoods(){
+        return mealFoods;
+    }
+
 }
