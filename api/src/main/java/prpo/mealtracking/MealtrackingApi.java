@@ -79,17 +79,45 @@ public class MealtrackingApi {
     }
 
     @GetMapping("/api/date")
-    public List<Meal> getMealsByDate(@PathVariable String date) {
-        // Pretvori string v LocalDate
-        LocalDate localDate = LocalDate.parse(date);
-        
-        // Izračunaj začetek in konec dneva
-        LocalDateTime startOfDay = localDate.atStartOfDay();          // 2024-12-14T00:00:00
-        LocalDateTime startOfNextDay = localDate.plusDays(1).atStartOfDay(); // 2024-12-15T00:00:00
-        
-        // Pridobi obroke za ta dan
-        return me.findByDateBetween(startOfDay, startOfNextDay);
-    }
+public List<Map<String, Object>> getMealsByDate(@RequestParam String date) {
+    // Pretvori string v LocalDate
+    LocalDate localDate = LocalDate.parse(date);
+    
+    // Izračunaj začetek in konec dneva
+    LocalDateTime startOfDay = localDate.atStartOfDay();
+    LocalDateTime startOfNextDay = localDate.plusDays(1).atStartOfDay();
+    
+    // Pridobi obroke za ta dan
+    List<Meal> meals = me.findByDateBetween(startOfDay, startOfNextDay);
+    
+    return meals.stream()
+        .map(meal -> {
+            Map<String, Object> mealMap = new HashMap<>();
+            mealMap.put("id", meal.getId());
+            mealMap.put("mealType", meal.getmealType());
+            mealMap.put("dateTime", meal.getDateTime());
+            mealMap.put("calories", meal.getCalories());
+            
+            // Foods kot seznam hashmapov
+            List<Map<String, Object>> foods = meal.getFoods().stream()
+                .map(mf -> {
+                    Map<String, Object> foodMap = new HashMap<>();
+                    
+                    // Dodaj vse potrebne podatke
+                    foodMap.put("id", mf.getId());
+                    foodMap.put("foodName", mf.getfood() != null ? mf.getfood().getFoodName() : "");
+                    foodMap.put("amount", mf.getamount());
+                    foodMap.put("calories", mf.getCalories());
+                    
+                    return foodMap;
+                })
+                .collect(Collectors.toList());
+            
+            mealMap.put("foods", foods);
+            return mealMap;
+        })
+        .collect(Collectors.toList());
+}
 
     @GetMapping("/api/mealsToday")
     public List<Map<String, Object>> getTodayMealsSimple() {
