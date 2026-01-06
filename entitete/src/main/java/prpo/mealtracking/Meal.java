@@ -20,12 +20,22 @@ public class Meal {
     @OneToMany(mappedBy = "meal", cascade = CascadeType.ALL)
     private List<MealFood> mealFoods = new ArrayList<>();
 
+    private String userId;
+
     public Meal(){
 
     }
 
     public Meal(char mealType){
         this.mealType = mealType;
+    }
+
+    public String getuserId(){
+        return userId;
+    }
+
+    public void setUserId(String s){
+        this.userId = s;
     }
 
     public Integer getId(){
