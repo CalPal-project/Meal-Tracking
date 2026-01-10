@@ -1,7 +1,5 @@
 package prpo.mealtracking;
 
-import com.fasterxml.jackson.databind.ser.std.StdArraySerializers.IntArraySerializer;
-
 import jakarta.persistence.*;
 
 @Entity

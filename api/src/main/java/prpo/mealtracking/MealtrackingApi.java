@@ -8,14 +8,12 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import jakarta.persistence.criteria.CriteriaBuilder.In;
 import jakarta.transaction.Transactional;
 
 import org.springframework.web.bind.annotation.*;
 
 import prpo.mealtracking.dtos.CreateMealRequest;
 import prpo.mealtracking.dtos.FoodAmount;
-import prpo.mealtracking.dtos.MealDto;
 import prpo.mealtracking.dtos.UpdateMealRequest;
 
 @CrossOrigin(origins = "*")  // Dovoli vse origins
@@ -31,8 +29,9 @@ public class MealtrackingApi {
         this.fr = fr;
     }
 
+    //popravi da bo gledal tudi userid -> ocitno ne rabimo? 
     @GetMapping("/api/getMeal")
-    public Optional<Meal> getMeal(Long id){
+    public Optional<Meal> getMeal(Long id, String UserId){
         return me.findById(id);
     }
 
@@ -54,6 +53,7 @@ public class MealtrackingApi {
         meal.setmealType(request.mealType);
         meal.setDateTime(request.dateTime);
         meal.setCalories(request.calories);
+        meal.setUserId(request.userId);
 
         meal = me.save(meal);
         
@@ -78,8 +78,9 @@ public class MealtrackingApi {
         return rez;
     }
 
+    //popravi da gelda tut userID
     @GetMapping("/api/date")
-public List<Map<String, Object>> getMealsByDate(@RequestParam String date) {
+public List<Map<String, Object>> getMealsByDate(@RequestParam String date, Long userId) {
     // Pretvori string v LocalDate
     LocalDate localDate = LocalDate.parse(date);
     
@@ -88,7 +89,7 @@ public List<Map<String, Object>> getMealsByDate(@RequestParam String date) {
     LocalDateTime startOfNextDay = localDate.plusDays(1).atStartOfDay();
     
     // Pridobi obroke za ta dan
-    List<Meal> meals = me.findByDateBetween(startOfDay, startOfNextDay);
+    List<Meal> meals = me.findByDateBetween(startOfDay, startOfNextDay, userId);
     
     return meals.stream()
         .map(meal -> {
@@ -119,13 +120,14 @@ public List<Map<String, Object>> getMealsByDate(@RequestParam String date) {
         .collect(Collectors.toList());
 }
 
-    @GetMapping("/api/mealsToday")
-    public List<Map<String, Object>> getTodayMealsSimple() {
-    List<Meal> meals = me.findByDateBetween(
-        LocalDate.now().atStartOfDay(),
-        LocalDate.now().plusDays(1).atStartOfDay()
-    );
-    
+@GetMapping("/api/mealsToday")
+public List<Map<String, Object>> getTodayMealsSimple(@RequestParam Long userId) {
+
+    LocalDateTime startOfDay = LocalDate.now().atStartOfDay();
+    LocalDateTime endOfDay = LocalDate.now().plusDays(1).atStartOfDay();
+
+    List<Meal> meals = me.findTodayMealsByUserId(userId, startOfDay, endOfDay);
+
     return meals.stream()
         .map(meal -> {
             Map<String, Object> mealMap = new HashMap<>();
@@ -133,8 +135,7 @@ public List<Map<String, Object>> getMealsByDate(@RequestParam String date) {
             mealMap.put("mealType", meal.getmealType());
             mealMap.put("dateTime", meal.getDateTime());
             mealMap.put("calories", meal.getCalories());
-            
-            // Foods kot seznam hashmapov
+
             List<Map<String, Object>> foods = meal.getFoods().stream()
                 .map(mf -> {
                     Map<String, Object> foodMap = new HashMap<>();
@@ -144,12 +145,12 @@ public List<Map<String, Object>> getMealsByDate(@RequestParam String date) {
                     return foodMap;
                 })
                 .collect(Collectors.toList());
-            
+
             mealMap.put("foods", foods);
             return mealMap;
         })
         .collect(Collectors.toList());
-    }
+}
 
     @DeleteMapping("/api/deleteMeal")
     public void deleteMeal(@RequestParam Long id){
@@ -163,6 +164,7 @@ public List<Map<String, Object>> getMealsByDate(@RequestParam String date) {
         meal.setmealType(updateRequest.mealType);
         meal.setDateTime(updateRequest.dateTime);
         meal.setCalories(updateRequest.calories);
+        meal.setUserId(updateRequest.userId);
 
         me.deleteMealFoodsByMealId(id);
         meal = me.save(meal);

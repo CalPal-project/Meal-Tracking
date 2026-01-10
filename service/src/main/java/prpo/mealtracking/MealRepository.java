@@ -1,6 +1,5 @@
 package prpo.mealtracking;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -16,8 +15,8 @@ import jakarta.transaction.Transactional;
 public interface MealRepository extends JpaRepository<Meal, Long> {
     
     // 1. Pridobi vse obroke za določen datum (uporabljajoč LocalDateTime)
-    @Query("SELECT m FROM Meal m WHERE m.dateTime >= :startOfDay AND m.dateTime < :startOfNextDay")
-    List<Meal> findByDateBetween(@Param("startOfDay") LocalDateTime startOfDay, @Param("startOfNextDay") LocalDateTime startOfNextDay);
+    @Query("SELECT m FROM Meal m WHERE m.userId = :userId AND m.dateTime >= :startOfDay AND m.dateTime < :startOfNextDay")
+    List<Meal> findByDateBetween(@Param("startOfDay") LocalDateTime startOfDay, @Param("startOfNextDay") LocalDateTime startOfNextDay, @Param("userId") Long userId);
     
     // 2. Pridobi današnje obroke
     @Query("SELECT m FROM Meal m WHERE m.dateTime >= :startOfToday AND m.dateTime < :startOfTomorrow")
@@ -28,4 +27,7 @@ public interface MealRepository extends JpaRepository<Meal, Long> {
     @Transactional
     @Query(value = "DELETE FROM meal_food WHERE meal_id = :id", nativeQuery = true)
     void deleteMealFoodsByMealId(@Param("id") Long id);
+
+    @Query("SELECT m FROM Meal m WHERE m.userId = :userId AND m.dateTime >= :startOfToday AND m.dateTime < :startOfTomorrow")
+    List<Meal> findTodayMealsByUserId(@Param("userId") Long userId,@Param("startOfToday") LocalDateTime startOfToday,@Param("startOfTomorrow") LocalDateTime startOfTomorrow);
 }

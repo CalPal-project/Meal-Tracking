@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import prpo.mealtracking.Meal;
-import prpo.mealtracking.MealFood;
 
 public class MealDto {
     private Integer id;
@@ -13,15 +12,18 @@ public class MealDto {
     private LocalDateTime dateTime;
     private Double calories;
     private List<FoodItemDto> foods;
+    private Long userId;
 
     public MealDto(Meal meal) {
         this.id = meal.getId();
         this.mealType = meal.getmealType();
         this.dateTime = meal.getDateTime();
         this.calories = meal.getCalories();
+        this.userId = meal.getuserId();
         this.foods = meal.getFoods().stream()
             .map(FoodItemDto::new)
             .collect(Collectors.toList());
+        
     }
 
     // Getterji in setterji
@@ -30,4 +32,5 @@ public class MealDto {
     public LocalDateTime getDateTime() { return dateTime; }
     public Double getCalories() { return calories; }
     public List<FoodItemDto> getFoods() { return foods; }
+    public Long getUserId() { return userId; }
 }

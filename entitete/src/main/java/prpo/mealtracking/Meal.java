@@ -20,7 +20,7 @@ public class Meal {
     @OneToMany(mappedBy = "meal", cascade = CascadeType.ALL)
     private List<MealFood> mealFoods = new ArrayList<>();
 
-    private String userId;
+    private Long userId;
 
     public Meal(){
 
@@ -30,11 +30,11 @@ public class Meal {
         this.mealType = mealType;
     }
 
-    public String getuserId(){
+    public Long getuserId(){
         return userId;
     }
 
-    public void setUserId(String s){
+    public void setUserId(Long s){
         this.userId = s;
     }
 

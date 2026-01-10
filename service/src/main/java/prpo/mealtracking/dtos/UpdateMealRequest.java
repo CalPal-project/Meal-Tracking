@@ -8,4 +8,5 @@ public class UpdateMealRequest {
     public List<FoodAmount> foods;
     public LocalDateTime dateTime;
     public double calories;
+    public Long userId;
 }
