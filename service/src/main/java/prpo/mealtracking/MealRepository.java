@@ -13,12 +13,10 @@ import jakarta.transaction.Transactional;
 
 @Repository
 public interface MealRepository extends JpaRepository<Meal, Long> {
-    
-    // 1. Pridobi vse obroke za določen datum (uporabljajoč LocalDateTime)
+
     @Query("SELECT m FROM Meal m WHERE m.userId = :userId AND m.dateTime >= :startOfDay AND m.dateTime < :startOfNextDay")
     List<Meal> findByDateBetween(@Param("startOfDay") LocalDateTime startOfDay, @Param("startOfNextDay") LocalDateTime startOfNextDay, @Param("userId") Long userId);
-    
-    // 2. Pridobi današnje obroke
+
     @Query("SELECT m FROM Meal m WHERE m.dateTime >= :startOfToday AND m.dateTime < :startOfTomorrow")
     List<Meal> findTodayMeals(@Param("startOfToday") LocalDateTime startOfToday, @Param("startOfTomorrow") LocalDateTime startOfTomorrow);
 

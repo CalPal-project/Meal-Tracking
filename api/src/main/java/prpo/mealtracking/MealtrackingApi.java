@@ -29,16 +29,11 @@ public class MealtrackingApi {
         this.fr = fr;
     }
 
-    //popravi da bo gledal tudi userid -> ocitno ne rabimo? 
+    //ni dokumentacije
     @GetMapping("/api/getMeal")
-    public Optional<Meal> getMeal(Long id, String UserId){
+    public Optional<Meal> getMeal(Long id){
         return me.findById(id);
     }
-
-    // @PostMapping("/api/addMeal")
-    // public Meal addMeal(@RequestBody Meal meal){
-    //     return me.save(meal);
-    // }
 
     @GetMapping("/api/getFood")
     public Optional<Food> getFood(Integer id){
@@ -78,79 +73,74 @@ public class MealtrackingApi {
         return rez;
     }
 
-    //popravi da gelda tut userID
     @GetMapping("/api/date")
-public List<Map<String, Object>> getMealsByDate(@RequestParam String date, Long userId) {
-    // Pretvori string v LocalDate
-    LocalDate localDate = LocalDate.parse(date);
-    
-    // Izračunaj začetek in konec dneva
-    LocalDateTime startOfDay = localDate.atStartOfDay();
-    LocalDateTime startOfNextDay = localDate.plusDays(1).atStartOfDay();
-    
-    // Pridobi obroke za ta dan
-    List<Meal> meals = me.findByDateBetween(startOfDay, startOfNextDay, userId);
-    
-    return meals.stream()
-        .map(meal -> {
-            Map<String, Object> mealMap = new HashMap<>();
-            mealMap.put("id", meal.getId());
-            mealMap.put("mealType", meal.getmealType());
-            mealMap.put("dateTime", meal.getDateTime());
-            mealMap.put("calories", meal.getCalories());
-            
-            // Foods kot seznam hashmapov
-            List<Map<String, Object>> foods = meal.getFoods().stream()
-                .map(mf -> {
-                    Map<String, Object> foodMap = new HashMap<>();
-                    
-                    // Dodaj vse potrebne podatke
-                    foodMap.put("id", mf.getId());
-                    foodMap.put("foodName", mf.getfood() != null ? mf.getfood().getFoodName() : "");
-                    foodMap.put("amount", mf.getamount());
-                    foodMap.put("calories", mf.getCalories());
-                    
-                    return foodMap;
-                })
-                .collect(Collectors.toList());
-            
-            mealMap.put("foods", foods);
-            return mealMap;
-        })
-        .collect(Collectors.toList());
-}
+    public List<Map<String, Object>> getMealsByDate(@RequestParam String date, Long userId) {
+        LocalDate localDate = LocalDate.parse(date);
 
-@GetMapping("/api/mealsToday")
-public List<Map<String, Object>> getTodayMealsSimple(@RequestParam Long userId) {
+        LocalDateTime startOfDay = localDate.atStartOfDay();
+        LocalDateTime startOfNextDay = localDate.plusDays(1).atStartOfDay();
+        
+        // Pridobi obroke za ta dan
+        List<Meal> meals = me.findByDateBetween(startOfDay, startOfNextDay, userId);
+        
+        return meals.stream()
+            .map(meal -> {
+                Map<String, Object> mealMap = new HashMap<>();
+                mealMap.put("id", meal.getId());
+                mealMap.put("mealType", meal.getmealType());
+                mealMap.put("dateTime", meal.getDateTime());
+                mealMap.put("calories", meal.getCalories());
+                
+                // Foods kot seznam hashmapov
+                List<Map<String, Object>> foods = meal.getFoods().stream()
+                    .map(mf -> {
+                        Map<String, Object> foodMap = new HashMap<>();
+                        foodMap.put("id", mf.getId());
+                        foodMap.put("foodName", mf.getfood() != null ? mf.getfood().getFoodName() : "");
+                        foodMap.put("amount", mf.getamount());
+                        foodMap.put("calories", mf.getCalories());
+                        
+                        return foodMap;
+                    })
+                    .collect(Collectors.toList());
+                
+                mealMap.put("foods", foods);
+                return mealMap;
+            })
+            .collect(Collectors.toList());
+    }
 
-    LocalDateTime startOfDay = LocalDate.now().atStartOfDay();
-    LocalDateTime endOfDay = LocalDate.now().plusDays(1).atStartOfDay();
+    @GetMapping("/api/mealsToday")
+    public List<Map<String, Object>> getTodayMealsSimple(@RequestParam Long userId) {
 
-    List<Meal> meals = me.findTodayMealsByUserId(userId, startOfDay, endOfDay);
+        LocalDateTime startOfDay = LocalDate.now().atStartOfDay();
+        LocalDateTime endOfDay = LocalDate.now().plusDays(1).atStartOfDay();
 
-    return meals.stream()
-        .map(meal -> {
-            Map<String, Object> mealMap = new HashMap<>();
-            mealMap.put("id", meal.getId());
-            mealMap.put("mealType", meal.getmealType());
-            mealMap.put("dateTime", meal.getDateTime());
-            mealMap.put("calories", meal.getCalories());
+        List<Meal> meals = me.findTodayMealsByUserId(userId, startOfDay, endOfDay);
 
-            List<Map<String, Object>> foods = meal.getFoods().stream()
-                .map(mf -> {
-                    Map<String, Object> foodMap = new HashMap<>();
-                    foodMap.put("foodName", mf.getfood() != null ? mf.getfood().getFoodName() : "");
-                    foodMap.put("amount", mf.getamount());
-                    foodMap.put("calories", mf.getCalories());
-                    return foodMap;
-                })
-                .collect(Collectors.toList());
+        return meals.stream()
+            .map(meal -> {
+                Map<String, Object> mealMap = new HashMap<>();
+                mealMap.put("id", meal.getId());
+                mealMap.put("mealType", meal.getmealType());
+                mealMap.put("dateTime", meal.getDateTime());
+                mealMap.put("calories", meal.getCalories());
 
-            mealMap.put("foods", foods);
-            return mealMap;
-        })
-        .collect(Collectors.toList());
-}
+                List<Map<String, Object>> foods = meal.getFoods().stream()
+                    .map(mf -> {
+                        Map<String, Object> foodMap = new HashMap<>();
+                        foodMap.put("foodName", mf.getfood() != null ? mf.getfood().getFoodName() : "");
+                        foodMap.put("amount", mf.getamount());
+                        foodMap.put("calories", mf.getCalories());
+                        return foodMap;
+                    })
+                    .collect(Collectors.toList());
+
+                mealMap.put("foods", foods);
+                return mealMap;
+            })
+            .collect(Collectors.toList());
+    }
 
     @DeleteMapping("/api/deleteMeal")
     public void deleteMeal(@RequestParam Long id){
@@ -183,10 +173,4 @@ public List<Map<String, Object>> getTodayMealsSimple(@RequestParam Long userId) 
         }
         return meal;
     }
-
-
-    
-
-    
-
 }
